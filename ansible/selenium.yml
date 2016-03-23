@@ -1,0 +1,7 @@
+---
+- name: install selenium
+  sudo: yes
+  hosts:
+    - selenium
+  roles:
+    - selenium

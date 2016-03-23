@@ -1,0 +1,13 @@
+
+vagrant-selenium-1
+
+[selenium-hub]
+vagrant-selenium-1
+
+[selenium-node]
+vagrant-selenium-1
+
+[selenium:children]
+selenium-hub
+selenium-node
+

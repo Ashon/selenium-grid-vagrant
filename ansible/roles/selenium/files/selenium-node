@@ -1,0 +1,83 @@
+#!/bin/bash
+# Note that this script requires you to have
+# an X window running on Display :90
+# This can be done by running: /usr/bin/Xvfb :90 -ac -screen 0 1024x768x8 &
+#
+# You can save this script as /etc/init.d/selenium to start and stop selenium
+
+PORT=5555
+
+DESC="Selenium server"
+XVFB_BIN=/usr/bin/xvfb-run
+JAVA_BIN=/usr/bin/java
+
+SELENIUM_DIR=/etc/selenium
+PID_FILE="/var/run/selenium-node.pid"
+JAR_FILE="/var/lib/selenium/selenium-server-2.53.0.jar"
+LOG_FILE="/var/log/selenium/selenium_node.log"
+CHROME_DRIVER="/var/lib/chrome-driver/chromedriver"
+
+ROLE=node
+HUB_URL="http://localhost:4444/grid/register"
+DAEMON_OPT="-a $JAVA_BIN -jar $JAR_FILE -Djava.security.egd=file:///dev/urandom switch -role $ROLE -hub $HUB_URL -port $PORT -log $LOG_FILE"
+
+NAME=selenium
+
+export LD_LIBRARY_PATH=/usr/lib/x86_64-linux-gnu/
+
+case "$1" in
+    start)
+        echo -n "Starting $DESC: "
+
+	start-stop-daemon \
+		--quiet \
+		--oknodo \
+		--start \
+		--background \
+		--pidfile $PID_FILE \
+		--make-pidfile \
+		--exec $XVFB_BIN \
+		-- $DAEMON_OPT
+
+        echo "$NAME."
+        ;;
+
+    stop)
+        echo -n "Stopping $DESC: "
+
+        start-stop-daemon \
+		--stop \
+		--pidfile $PID_FILE
+
+        echo "$NAME."
+        ;;
+
+    restart|force-reload)
+        echo -n "Restarting $DESC: "
+
+        start-stop-daemon \
+		--stop \
+		--pidfile $PID_FILE
+
+        sleep 1
+
+        start-stop-daemon \
+                --quiet \
+                --oknodo \
+                --start \
+                --background \
+                --pidfile $PID_FILE \
+                --make-pidfile \
+                --exec $XVFB_BIN -a $JAVA_BIN \
+                -- $DAEMON_OPT
+
+        echo "$NAME."
+        ;;
+
+    *)
+        N=/etc/init.d/$NAME
+        echo "Usage: $N {start|stop|restart|force-reload}" >&2
+        exit 1
+        ;;
+esac
+
