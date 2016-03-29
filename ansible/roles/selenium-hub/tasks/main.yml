@@ -1,11 +1,4 @@
 ---
-- name: install dependencies
-  apt: name={{ item }}
-  with_items:
-    - openjdk-7-jre-headless
-    - firefox
-    - xvfb
-
 - name: generate selenium directory
   file: path={{ item }} state=directory
   with_items:
@@ -21,5 +14,3 @@
   copy: src={{ item }} dest=/etc/init.d mode=0755
   with_items:
     - selenium-hub
-    - selenium-node
-

@@ -1,11 +1,12 @@
 
-vagrant-selenium-1
+vagrant-selenium-hub
 
 [selenium-hub]
-vagrant-selenium-1
+vagrant-selenium-hub
 
 [selenium-node]
-vagrant-selenium-1
+vagrant-selenium-node-1
+vagrant-selenium-node-2
 
 [selenium:children]
 selenium-hub

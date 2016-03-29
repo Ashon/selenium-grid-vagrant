@@ -1,0 +1,7 @@
+---
+- name: install dependencies
+  apt: name={{ item }}
+  with_items:
+    - openjdk-7-jre-headless
+    - firefox
+    - xvfb

@@ -1,7 +1,21 @@
 ---
-- name: install selenium
+- name: install infrastructure
   sudo: yes
   hosts:
     - selenium
   roles:
-    - selenium
+    - infrastructure
+
+- name: install infrastructure
+  sudo: yes
+  hosts:
+    - selenium-hub
+  roles:
+    - selenium-hub
+
+- name: install infrastructure
+  sudo: yes
+  hosts:
+    - selenium-hub
+  roles:
+    - selenium-node
