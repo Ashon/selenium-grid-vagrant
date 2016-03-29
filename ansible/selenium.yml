@@ -6,16 +6,16 @@
   roles:
     - infrastructure
 
-- name: install infrastructure
+- name: install selenium hub
   sudo: yes
   hosts:
     - selenium-hub
   roles:
     - selenium-hub
 
-- name: install infrastructure
+- name: install selenium node
   sudo: yes
   hosts:
-    - selenium-hub
+    - selenium-node
   roles:
     - selenium-node

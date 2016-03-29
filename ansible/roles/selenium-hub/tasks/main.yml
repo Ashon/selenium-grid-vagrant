@@ -14,3 +14,7 @@
   copy: src={{ item }} dest=/etc/init.d mode=0755
   with_items:
     - selenium-hub
+
+- name: add service
+  shell: update-rc.d selenium-hub enable
+

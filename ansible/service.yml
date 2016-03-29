@@ -1,0 +1,16 @@
+---
+- name: start selenium-hub
+  sudo: yes
+  hosts:
+    - selenium-hub
+  tasks:
+    - name: start daemon
+      service: name=selenium-hub state=started
+
+- name: start selenium-node
+  sudo: yes
+  hosts:
+    - selenium-node
+  tasks:
+    - name: start daemon
+      service: name=selenium-node state=started

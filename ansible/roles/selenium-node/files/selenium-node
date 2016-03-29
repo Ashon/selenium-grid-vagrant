@@ -2,8 +2,20 @@
 # Note that this script requires you to have
 # an X window running on Display :90
 # This can be done by running: /usr/bin/Xvfb :90 -ac -screen 0 1024x768x8 &
-#
+
+### BEGIN INIT INFO
+# Provides: selenium-node
+# Required-Start:    $local_fs $remote_fs $network $syslog $named
+# Required-Stop:     $local_fs $remote_fs $network $syslog $named
+# Default-Start: 2 3 4 5
+# Default-Stop: 0 1 6
+# Short-Description: Start and stop selenium-node
+# Description: selenium-node
+### END INIT INFO
+
 # You can save this script as /etc/init.d/selenium to start and stop selenium
+
+. /lib/lsb/init-functions
 
 PORT=5555
 
@@ -18,59 +30,49 @@ LOG_FILE="/var/log/selenium/selenium_node.log"
 CHROME_DRIVER="/var/lib/chrome-driver/chromedriver"
 
 ROLE=node
-HUB_URL="http://localhost:4444/grid/register"
+HUB_URL="http://192.168.60.10:4444/grid/register"
 DAEMON_OPT="-a $JAVA_BIN -jar $JAR_FILE -Djava.security.egd=file:///dev/urandom switch -role $ROLE -hub $HUB_URL -port $PORT -log $LOG_FILE"
 
 NAME=selenium
 
 export LD_LIBRARY_PATH=/usr/lib/x86_64-linux-gnu/
 
+start() {
+    start-stop-daemon \
+        --quiet \
+        --oknodo \
+        --start \
+        --background \
+        --pidfile $PID_FILE \
+        --make-pidfile \
+        --exec $XVFB_BIN \
+        -- $DAEMON_OPT
+}
+
+stop() {
+    start-stop-daemon \
+        --stop \
+        --pidfile $PID_FILE
+}
+
 case "$1" in
     start)
         echo -n "Starting $DESC: "
-
-	start-stop-daemon \
-		--quiet \
-		--oknodo \
-		--start \
-		--background \
-		--pidfile $PID_FILE \
-		--make-pidfile \
-		--exec $XVFB_BIN \
-		-- $DAEMON_OPT
-
+        start
         echo "$NAME."
         ;;
 
     stop)
         echo -n "Stopping $DESC: "
-
-        start-stop-daemon \
-		--stop \
-		--pidfile $PID_FILE
-
+        stop
         echo "$NAME."
         ;;
 
     restart|force-reload)
         echo -n "Restarting $DESC: "
-
-        start-stop-daemon \
-		--stop \
-		--pidfile $PID_FILE
-
+        stop
         sleep 1
-
-        start-stop-daemon \
-                --quiet \
-                --oknodo \
-                --start \
-                --background \
-                --pidfile $PID_FILE \
-                --make-pidfile \
-                --exec $XVFB_BIN -a $JAVA_BIN \
-                -- $DAEMON_OPT
-
+        start
         echo "$NAME."
         ;;
 

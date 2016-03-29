@@ -15,3 +15,5 @@
   with_items:
     - selenium-node
 
+- name: add service
+  shell: update-rc.d selenium-node enable
